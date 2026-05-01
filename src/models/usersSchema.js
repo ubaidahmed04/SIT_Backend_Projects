@@ -6,15 +6,21 @@ const userSchema = new mongoose.Schema({
         required : true,
         unique:true
     },
+    email : {
+        type: String,
+        required : true,
+        unique:true
+    }, 
     password : {
         type: String,
         required : true,
         minLength: [6, "Password must be atleast 6 characters"]
         
     },
-    age:{
-        type: Number,
-        required : true
+    role:{
+        type: String,
+        required : true,
+        default : "User"
     }
 })
 

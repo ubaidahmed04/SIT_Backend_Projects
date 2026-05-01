@@ -10,6 +10,8 @@ connectiondb()
 app.use(express.json())
 app.use('/api/auth', userRoute)
 // app.use('/api/product', productRoute)
+
+
 app.get('/health', (req, res)=>{
      res.status(200).json({
         status: true,
