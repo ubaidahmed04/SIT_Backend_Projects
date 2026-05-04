@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
 const Users = require("../models/usersSchema");
 
 const updateUser =async (req, res) =>{
@@ -7,7 +8,7 @@ const updateUser =async (req, res) =>{
     const isValid = jwt.verify(token, process.env.JWT_SECRET)
     console.log(isValid)
     if(isValid){
-        await Users.findByIdAndUpdate(isValid.id,updatedData)
+        await Users.findByIdAxndUpdate(isValid.id,updatedData)
         return res.status(200).json({
             status: true,
             message: "User Updated Successfully",
@@ -45,9 +46,11 @@ const userRegister = async (req, res) => {
                 message: "All Field are Required"
             })
         }
-
+        
+        const hashPass = await bcrypt.hash(password, 10 )
+        console.log("Hash Password",hashPass)
         await Users.create({
-            name, email, password, role
+            name, email, password :hashPass, role
         })
         res.status(200).json({
             status: true,
@@ -80,11 +83,18 @@ const userLogin = async (req, res) => {
             message: "User Not Found"
         })
     }
-    const token = jwt.sign({email, id : isUser._id}, process.env.JWT_SECRET)
+    const isMatch = await bcrypt.compare(password, isUser.password )
+    if(!isMatch){
+       return  res.status(403).json({
+        status: false,
+        message: "Invalid Credentials",
+    })
+    }
+    const token = jwt.sign({id : isUser._id, role : isUser.role}, process.env.JWT_SECRET)
     res.status(200).json({
         status: true,
         message: "User Login Success",
         token
-    })
+    });
 }
 module.exports = { getUsersController, userRegister, userLogin , updateUser}
