@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 const Users = require("../models/usersSchema");
+const cloudinary = require("../config/cloudinaryConfig");
 
 const updateUser =async (req, res) =>{
     const updatedData = req.body;
@@ -97,4 +98,31 @@ const userLogin = async (req, res) => {
         token
     });
 }
-module.exports = { getUsersController, userRegister, userLogin , updateUser}
+
+const addUser =async (req, res) =>{
+    const file = req.file.path;
+    console.log(file)
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+    try{
+    const result = await cloudinary.uploader.upload(file, {
+      folder: 'school_project',  // Save in this folder on Cloudinary
+    });
+    console.log(result)
+
+
+
+        res.status(200).json({
+        status: true,
+        message: "User Add Success",
+        data : result
+    });
+    }catch(err){
+        res.status(500).json({
+        status: false,
+        message: err.message,
+    });
+    }
+}
+module.exports = { getUsersController, userRegister, userLogin , updateUser, addUser}
