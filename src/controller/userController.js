@@ -100,11 +100,12 @@ const userLogin = async (req, res) => {
 }
 
 const addUser =async (req, res) =>{
-    const file = req.file.path;
+    let file = req.file;
     console.log(file)
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
+    file = req.file.path
     try{
     const result = await cloudinary.uploader.upload(file, {
       folder: 'school_project',  // Save in this folder on Cloudinary
