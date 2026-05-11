@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt');
 const Users = require("../models/usersSchema");
 const cloudinary = require("../config/cloudinaryConfig");
+const generateToken = require("../utils/generateToken");
 
 const updateUser =async (req, res) =>{
     const updatedData = req.body;
@@ -47,7 +48,8 @@ const userRegister = async (req, res) => {
                 message: "All Field are Required"
             })
         }
-        
+        // check existingUser first 
+        // const 
         const hashPass = await bcrypt.hash(password, 10 )
         console.log("Hash Password",hashPass)
         await Users.create({
@@ -76,22 +78,23 @@ const userLogin = async (req, res) => {
             message: "All Field are Required"
         })
     }
-    const isUser = await Users.findOne({ email })
-    console.log(isUser)
-    if (!isUser) {
+    const currUser = await Users.findOne({ email })
+    console.log(currUser)
+    if (!currUser) {
         return res.status(400).json({
             status: false,
             message: "User Not Found"
         })
     }
-    const isMatch = await bcrypt.compare(password, isUser.password )
+    const isMatch = await bcrypt.compare(password, currUser.password )
     if(!isMatch){
        return  res.status(403).json({
         status: false,
         message: "Invalid Credentials",
     })
     }
-    const token = jwt.sign({id : isUser._id, role : isUser.role}, process.env.JWT_SECRET)
+    // const token = jwt.sign({id : currUser._id, role : currUser.role}, process.env.JWT_SECRET)
+    const token = generateToken(currUser)
     res.status(200).json({
         status: true,
         message: "User Login Success",

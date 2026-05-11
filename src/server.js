@@ -1,15 +1,17 @@
+const dotenv = require("dotenv")
 const express = require("express")
 const app = express()
-const dotenv = require("dotenv")
 const connectiondb = require("./config/connectdb.js")
 const userRoute = require("./routes/usersRoute.js")
+const studentRoute = require("./routes/studentRoutes.js")
 
 dotenv.config()
 
 connectiondb()
 app.use(express.json())
 app.use('/api/auth', userRoute)
-// app.use('/api/product', productRoute)
+app.use('/api/student', studentRoute)
+app.use('/api/department', studentRoute)
 
 
 app.get('/health', (req, res)=>{
