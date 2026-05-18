@@ -3,21 +3,21 @@ const mongoose  = require("mongoose");
 const StudentSchema =  new mongoose.Schema({
     name : {
         type : String,
-        require : true,
+        // required : true,
     },
     email : {
         type : String,
-        require : true,
+        // required : true,
         unique: true
     },
     password : {
         type : String,
-        require : true,
+        // required : true,
     },
-    role : {
+    course : {
         type : String,
-        enum : ["Admin", "Teacher", "Student"],
-        default : "Student"
+        // required : true,
+        
     },
     marks :{
         type: Number,

@@ -53,7 +53,7 @@ const userRegister = async (req, res) => {
         const hashPass = await bcrypt.hash(password, 10 )
         console.log("Hash Password",hashPass)
         await Users.create({
-            name, email, password :hashPass, role
+            name, email, password :hashPass, role : role.toLowerCase()
         })
         res.status(200).json({
             status: true,
@@ -61,7 +61,7 @@ const userRegister = async (req, res) => {
         })
 
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             status: false,
             message: error.message
         })

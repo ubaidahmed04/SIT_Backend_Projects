@@ -1,8 +1,8 @@
 const Students = require("../models/studentSchema");
 const bcrypt = require("bcrypt")
 const addStudent = async(req, res) =>{
-    const {name , email, password , role , marks} = req.body;
-    console.log(name , email, password , role , marks)
+    const {name , email, password , course , marks} = req.body;
+    console.log(name , email, password , course , marks)
     const  existUser = await Students.findOne({email});
 
     console.log(existUser)
@@ -13,19 +13,19 @@ const addStudent = async(req, res) =>{
         })
     }
     const hashPassword = await bcrypt.hash(password, 10)
-    await Students.create({name , email, password : hashPassword , role , marks})
+    await Students.create({name , email, password : hashPassword , course , marks})
      return res.status(201).json({
             status : true,
-            message : "User Add Successfully"
+            message : "Student Add Successfully"
         })
 }
 
 const getAllStudents = async (req, res) =>{
     try {
-        const allStudents = await Students.find();
+        const allStudents = await Students.find().select("-password");;
         return res.status(200).json({
             status : true,
-            message : "User Add Successfully",
+            message : "Students get Successfully",
             data : allStudents
         })
     } catch (error) {
