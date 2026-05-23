@@ -18,7 +18,7 @@ app.use('/api/department', studentRoute)
 app.get('/health', (req, res)=>{
      res.status(200).json({
         status: true,
-        message: "Server is working fine"
+        message: "Server is working fine Update "
     })
 })
 
